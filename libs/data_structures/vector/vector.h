@@ -1,6 +1,8 @@
 #ifndef UNTITLED1_VECTOR_H
 #define UNTITLED1_VECTOR_H
 
+#include <stdbool.h>
+
 typedef struct vector {
     int *data; // указатель на элементы вектора
     size_t size; // размер вектора
@@ -22,6 +24,19 @@ void shrinkToFit(vector *v);
 // освобождает память, выделенную вектору
 void deleteVector(vector *v);
 
+// возвращает True, если вектор пустой, False в обратном случае
+bool isFull(vector *v);
 
+// возвращает True, если вектор полный, False в обратном случае
+bool isEmpty(vector *v);
+
+// возвращает i-ый элемент вектора v.
+int getVectorValue(vector *v, size_t i);
+
+// добавляет элемент x в конец вектора v
+void pushBack(vector *v, int x);
+
+// удаляет последний элемент из вектора v.
+void popBack(vector *v);
 
 #endif //UNTITLED1_VECTOR_H
