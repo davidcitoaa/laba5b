@@ -62,13 +62,14 @@ void pushBack(vector *v, int x){
 
 void popBack(vector *v){
     if (isEmpty(v)) {
-        fprintf(stderr, "bad alloc");
+        fprintf(stderr, "The vector is empty, we cannot fulfill your request");
         exit(1);
     }
     v->size--;
 }
 
 int* atVector(vector *v, size_t index){
+    assert(v->size > 0);
     if (index > v->size) {
         fprintf(stderr, "IndexError: a[%d] is not exists", index);
         exit(1);
