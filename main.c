@@ -6,7 +6,6 @@
 
 int main() {
     vectorVoid v = {(int *) malloc(5 * sizeof(float)), 5, 10, sizeof(float)};
-
-    
+    createVectorV(5, sizeof(float));
     return 0;
 }
