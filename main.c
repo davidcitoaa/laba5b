@@ -5,7 +5,23 @@
 
 
 int main() {
-    vectorVoid v = {(int *) malloc(5 * sizeof(float)), 5, 10, sizeof(float)};
-    createVectorV(5, sizeof(float));
+    size_t n;
+    scanf("%zd", &n);
+
+    vectorVoid v = createVectorV(0, sizeof(float));
+    for (int i = 0; i < n; i++) {
+        float x;
+        scanf("%f", &x);
+
+        pushBackV(&v, &x);
+    }
+
+    for (int i = 0; i < n; i++) {
+        float x;
+        getVectorValueV(&v, i, &x);
+
+        printf("%f ", x);
+    }
+
     return 0;
 }
