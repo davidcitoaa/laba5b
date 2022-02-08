@@ -36,7 +36,7 @@ bool isEmptyV(vectorVoid *v);
 // возвращает True, если вектор пустой, False в обратном случае
 bool isFullV(vectorVoid *v);
 
-// записывает на index-ый элемент вектора v значение, расположенное по адресу source.
+// записывает по адресу destination index-ый элемент вектора v.
 void getVectorValueV(vectorVoid *v, size_t index, void *destination);
 
 // записывает на index-ый элемент вектора v значение, расположенное по адресу source.

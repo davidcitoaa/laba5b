@@ -34,7 +34,7 @@ void rest_pushBackV_fullVector() {
 }
 
 void test_popBackV_notEmptyVector() {
-    vectorVoid v = createVectorV(0, sizeof(char));
+    vectorVoid v = createVectorV(0, sizeof(int));
     int a = 5;
     pushBackV(&v, &a);
     int b = 6;
@@ -47,15 +47,17 @@ void test_popBackV_notEmptyVector() {
     popBackV(&v);
     int y;
     getVectorValueV(&v, 0, &y);
-
-    assert(y == a);
+    
+    assert(y == 5);
     assert(v.size == 2);
     assert(v.capacity == 4);
-    assert(isEmptyV(&v));
+    assert(isEmptyV(&v) == 0);
 }
 
 void test() {
     rest_pushBackV_emptyVector();
+    rest_pushBackV_fullVector();
+    test_popBackV_notEmptyVector();
 }
 
 int main() {
