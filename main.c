@@ -1,67 +1,13 @@
 #include <stdio.h>
-#include "libs/data_structures/vector/vectorVoid.h"
-#include "assert.h"
-#include "malloc.h"
-
-void rest_pushBackV_emptyVector() {
-    vectorVoid v = createVectorV(0, sizeof(char));
-    char a = 15;
-    pushBackV(&v, &a);
-    char b = 2;
-    pushBackV(&v, &b);
-    char c;
-    getVectorValueV(&v, 1, &c);
-
-    assert(b == c);
-    assert(v.size == 2);
-    assert(v.capacity == 2);
-    assert(c == 2);
-}
-
-void rest_pushBackV_fullVector() {
-    vectorVoid v = createVectorV(0, sizeof(char));
-    char a = 15;
-    pushBackV(&v, &a);
-    char b = 2;
-    pushBackV(&v, &b);
-    char c;
-    getVectorValueV(&v, 1, &c);
-
-    assert(b == c);
-    assert(v.size == 2);
-    assert(v.capacity == 2);
-    assert(c == 2);
-}
-
-void test_popBackV_notEmptyVector() {
-    vectorVoid v = createVectorV(0, sizeof(int));
-    int a = 5;
-    pushBackV(&v, &a);
-    int b = 6;
-    pushBackV(&v, &b);
-    popBackV(&v);
-    int c = 20;
-    pushBackV(&v, &c);
-    int d = 25;
-    pushBackV(&v, &d);
-    popBackV(&v);
-    int y;
-    getVectorValueV(&v, 0, &y);
-    
-    assert(y == 5);
-    assert(v.size == 2);
-    assert(v.capacity == 4);
-    assert(isEmptyV(&v) == 0);
-}
-
-void test() {
-    rest_pushBackV_emptyVector();
-    rest_pushBackV_fullVector();
-    test_popBackV_notEmptyVector();
-}
+#include "libs/data_structures/matrix/matrix.h"
 
 int main() {
-    test();
+    matrix m = getMemMatrix(2, 2);
+    matrix n = getMemMatrix(2, 2);
+    matrix *a = getMemArrayOfMatrices(2, 2, 2);
+    inputMatrices(a, 2);
+//    freeMemMatrix(m);
+    outputMatrices(a, 2);
 
     return 0;
 }
