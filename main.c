@@ -3,12 +3,12 @@
 
 int main() {
     matrix m = getMemMatrix(2, 2);
-    matrix n = getMemMatrix(2, 2);
-    matrix *a = getMemArrayOfMatrices(2, 2, 2);
-    inputMatrices(a, 2);
+//    matrix n = getMemMatrix(2, 2);
+//    matrix *a = getMemArrayOfMatrices(2, 2, 2);
+//    inputMatrices(a, 2);
 
-    swapColumns(a[1], 1, 2);
-    outputMatrices(a, 2);
+    swapColumns(m, 1, 2);
+    outputMatrices(&m, 2);
 
     return 0;
 }
