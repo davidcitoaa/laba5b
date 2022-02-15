@@ -25,7 +25,22 @@ void swapRowsMinMax(matrix m) {
     swapRows(m, min.rowIndex, max.rowIndex);
 }
 
+//2. Упорядочить строки матрицы по неубыванию наибольших элементов строк
+//возвращает максимальный элемент в одномерном массиве а размера n
+int getMax(int *a, int n) {
+    int max = a[0];
+    for (int i = 1; i < n; ++i) {
+        if (a[i] > max) {
+            max = a[i];
+        }
+    }
+    return max;
+}
 
+// сортирует в двумерном массиве по неубыванию максимальные значения в одномерном массиве
+void sortRowsByMaxElement(matrix m) {
+    insertionSortRowsMatrixByRowCriteria(m, getMax);
+}
 
 int main() {
     matrix m = getMemMatrix(3, 3);
