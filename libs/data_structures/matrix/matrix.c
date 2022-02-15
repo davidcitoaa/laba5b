@@ -194,3 +194,4 @@ matrix *createArrayOfMatrixFromArray(const int *values, int nMatrices, int nRows
 
     return ms;
 }
+

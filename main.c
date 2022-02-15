@@ -17,6 +17,16 @@ void test_countZeroRows() {
     freeMemMatrix(m);
 }
 
+//1. Дана квадратная матрица, все элементы которой различны. Поменять местами
+//строки, в которых находятся максимальный и минимальный элементы.
+void swapRowsMinMax(matrix m) {
+    position min = getMinValuePos(m);
+    position max = getMaxValuePos(m);
+    swapRows(m, min.rowIndex, max.rowIndex);
+}
+
+
+
 int main() {
     matrix m = getMemMatrix(3, 3);
 //    matrix n = getMemMatrix(2, 2);
