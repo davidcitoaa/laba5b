@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "libs/data_structures/matrix/matrix.h"
 #include <assert.h>
+#include "malloc.h"
 
 void test_countZeroRows() {
     matrix m = createMatrixFromArray(
@@ -58,6 +59,59 @@ int getMin( int *a, int n) {
 
 void sortColsByMinElement(matrix m){
     insertionSortColsMatrixByColCriteria(m,getMin);
+}
+
+
+// 4.сли данная квадратная матрица 𝐴 симметрична, то заменить 𝐴 ее квадрат
+matrix mulMatrices(matrix m1, matrix m2) {
+    matrix saveNewMatrix = getMemMatrix(m1.nRows, m2.nCols);
+
+    for (int i = 0; i < m1.nRows; ++i) {
+        for (int j = 0; j < m2.nCols; ++j) {
+            saveNewMatrix.values[i][j] = 0;
+            for (int k = 0; k < m1.nCols; ++k) {
+                saveNewMatrix.values[i][j] += m1.values[i][k] * m2.values[k][j];
+            }
+        }
+    }
+    return saveNewMatrix;
+}
+
+void getSquareOfMatrixIfSymmetric(matrix *m) {
+    if (isSymmetricMatrix(*m)) {
+        *m = mulMatrices(*m, *m);
+    }
+}
+
+
+// 5. Дана квадратная матрица. Если среди сумм элементов строк матрицы нет равных, то транспонировать матрицу
+
+bool isUnique(int *a, int n) {
+    for (int i = 0; i < n; ++i) {
+        if (a[i] == a[i + 1]) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+
+long long getSum( int *a, int n) {
+    long long sum = 0;
+    for (size_t i = 0; i < n; ++i)
+        sum += a[i];
+    return sum;
+}
+
+void transposeIfMatrixHasEqualSumOfRows(matrix m) {
+    int *a = (int *) calloc(m.nRows, sizeof(int));
+    assert(a != NULL);
+
+    for (register size_t i = 0; i < m.nRows; ++i)
+        a[i] += getSum(m.values[i], m.nCols);
+    if (isUnique(a, m.nRows))
+        transposeSquareMatrix(m);
+    free(a);
 }
 
 int main() {
