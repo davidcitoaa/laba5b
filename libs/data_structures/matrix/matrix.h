@@ -1,6 +1,7 @@
 #ifndef UNTITLED1_MATRIX_H
 #define UNTITLED1_MATRIX_H
 #include "stdbool.h"
+#include <stddef.h>
 
 typedef struct matrix {
     int **values; // элементы матрицы

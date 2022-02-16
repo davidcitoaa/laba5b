@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "malloc.h"
 #include "array.h"
+#include <stddef.h>
 
 matrix getMemMatrix(int nRows, int nCols) {
     int **values = (int **) malloc(sizeof(int *) * nRows);
@@ -184,7 +185,7 @@ matrix createMatrixFromArray(const int *a, size_t nRows, size_t nCols) {
     }
 }
 
-matrix *createArrayOfMatrixFromArray(const int *values, int nMatrices, int nRows, int nCols) {
+matrix *createArrayOfMatrixFromArray(const int *values, size_t nMatrices, size_t nRows, size_t nCols) {
     matrix *ms = getMemArrayOfMatrices(nMatrices, nRows, nCols);
     int l = 0;
     for (int k = 0; k < nMatrices; k++)
