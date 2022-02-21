@@ -28,7 +28,7 @@ void swapRowsMinMax(matrix m) {
 
 //2. Упорядочить строки матрицы по неубыванию наибольших элементов строк
 //возвращает максимальный элемент в одномерном массиве а размера n
-int getMax(int *a, int n) {
+int getMax(const int *a, int n) {
     int max = a[0];
     for (int i = 1; i < n; ++i) {
         if (a[i] > max) {
@@ -47,22 +47,19 @@ void sortRowsByMaxElement(matrix m) {
 //минимальных элементов столбцов:
 
 //возвращает минимальный элемент в одномерном массиве а размера n
-int getMin( int *a, int n) {
+int getMin(const int *a, int n) {
     int min = a[0];
-    for (int i = 1; i < n; ++i) {
-        if (a[i] < min) {
+    for (int i = 1; i < n; ++i)
+        if (a[i] < min)
             min = a[i];
-        }
-    }
     return min;
 }
 
-void sortColsByMinElement(matrix m){
-    insertionSortColsMatrixByColCriteria(m,getMin);
+void sortColsByMinElement(matrix m) {
+    insertionSortColsMatrixByColCriteria(m, getMin);
 }
 
-
-// 4.сли данная квадратная матрица 𝐴 симметрична, то заменить 𝐴 ее квадрат
+// 4. Если данная квадратная матрица 𝐴 симметрична, то заменить 𝐴 ее квадрат
 matrix mulMatrices(matrix m1, matrix m2) {
     matrix saveNewMatrix = getMemMatrix(m1.nRows, m2.nCols);
 
@@ -83,7 +80,6 @@ void getSquareOfMatrixIfSymmetric(matrix *m) {
     }
 }
 
-
 // 5. Дана квадратная матрица. Если среди сумм элементов строк матрицы нет равных, то транспонировать матрицу
 
 bool isUnique(int *a, int n) {
@@ -96,7 +92,7 @@ bool isUnique(int *a, int n) {
 }
 
 
-long long getSum( int *a, int n) {
+long long getSum(int *a, int n) {
     long long sum = 0;
     for (size_t i = 0; i < n; ++i)
         sum += a[i];
@@ -114,28 +110,258 @@ void transposeIfMatrixHasEqualSumOfRows(matrix m) {
     free(a);
 }
 
-//6.Даны две квадратные матрицы 𝐴 и 𝐵. Определить, являются ли они взаимно
+//6. Даны две квадратные матрицы 𝐴 и 𝐵. Определить, являются ли они взаимно
 //обратными (𝐴 = 𝐵−1).
 
-bool isMutuallyInverseMatrices(matrix m1, matrix m2){
-    matrix mul=mulMatrices(m1, m2);
-    if (isEMatrix(mul)){
-        return 1;
-    }
-    return 0;
+bool isMutuallyInverseMatrices(matrix m1, matrix m2) {
+    matrix mul = mulMatrices(m1, m2);
+    bool res = isEMatrix(mul);
+    freeMemMatrix(mul);
+    return res;
+}
+
+void test_swapRowsMinMax1() {
+    matrix m1 = createMatrixFromArray(
+            (int[]) {
+                    1, 2, 3,
+                    4, 5, 6,
+                    7, 8, 9
+            },
+            3, 3
+    );
+    swapRowsMinMax(m1);
+    matrix m2 = createMatrixFromArray(
+            (int[]) {
+                    7, 8, 9,
+                    4, 5, 6,
+                    1, 2, 3
+            },
+            3, 3
+    );
+    assert(areTwoMatricesEqual(m1, m2));
+
+    freeMemMatrix(m1);
+    freeMemMatrix(m2);
+}
+
+void test_swapRowsMinMax2() {
+    matrix m1 = createMatrixFromArray(
+            (int[]) {
+                    12, 2, 3,
+                    4, 555, 6,
+                    7, 8, 1
+            },
+            3, 3
+    );
+    swapRowsMinMax(m1);
+    matrix m2 = createMatrixFromArray(
+            (int[]) {
+                    12, 2, 3,
+                    7, 8, 1,
+                    4, 555, 6,
+            },
+            3, 3
+    );
+    assert(areTwoMatricesEqual(m1, m2));
+
+    freeMemMatrix(m1);
+    freeMemMatrix(m2);
+}
+
+void test_swapRowsMinMax3() {
+    matrix m1 = createMatrixFromArray(
+            (int[]) {
+                    1, 2, 3, 4,
+                    5, 6, 7, 8,
+                    9, 10, 11, 12,
+                    13, 14, 15, 16
+            },
+            4, 4
+    );
+    swapRowsMinMax(m1);
+    matrix m2 = createMatrixFromArray(
+            (int[]) {
+                    13, 14, 15, 16,
+                    5, 6, 7, 8,
+                    9, 10, 11, 12,
+                    1, 2, 3, 4,
+            },
+            4, 4
+    );
+    assert(areTwoMatricesEqual(m1, m2));
+
+    freeMemMatrix(m1);
+    freeMemMatrix(m2);
+}
+
+void test_swapRowsMinMax() {
+    test_swapRowsMinMax1();
+    test_swapRowsMinMax2();
+    test_swapRowsMinMax3();
+}
+
+void test_sortRowsByMaxElement1() {
+    matrix m1 = createMatrixFromArray(
+            (int[]) {
+                    4, 5, 6,
+                    7, 8, 9,
+                    1, 2, 3
+            },
+            3, 3
+    );
+    sortRowsByMaxElement(m1);
+    matrix m2 = createMatrixFromArray(
+            (int[]) {
+                    1, 2, 3,
+                    4, 5, 6,
+                    7, 8, 9,
+            },
+            3, 3
+    );
+    assert(areTwoMatricesEqual(m1, m2));
+
+    freeMemMatrix(m1);
+    freeMemMatrix(m2);
+}
+
+void test_sortRowsByMaxElement2() {
+    matrix m1 = createMatrixFromArray(
+            (int[]) {
+                    4, 25, 6,
+                    7, 8, 9,
+                    25, 2, 3
+            },
+            3, 3
+    );
+    sortRowsByMaxElement(m1);
+    matrix m2 = createMatrixFromArray(
+            (int[]) {
+                    7, 8, 9,
+                    4, 25, 6,
+                    25, 2, 3
+            },
+            3, 3
+    );
+    assert(areTwoMatricesEqual(m1, m2));
+
+    freeMemMatrix(m1);
+    freeMemMatrix(m2);
+}
+
+void test_sortRowsByMaxElement3() {
+    matrix m1 = createMatrixFromArray(
+            (int[]) {
+                    5, 25,
+                    1, 25
+            },
+            2, 2
+    );
+    sortRowsByMaxElement(m1);
+    matrix m2 = createMatrixFromArray(
+            (int[]) {
+                    5, 25,
+                    1, 25
+            },
+            2, 2
+    );
+    assert(areTwoMatricesEqual(m1, m2));
+
+    freeMemMatrix(m1);
+    freeMemMatrix(m2);
+}
+
+void test_sortRowsByMaxElement() {
+    test_sortRowsByMaxElement1();
+    test_sortRowsByMaxElement2();
+    test_sortRowsByMaxElement3();
+}
+
+void test_sortColsByMinElement1() {
+    matrix m1 = createMatrixFromArray(
+            (int[]) {
+                    4, 5, 6,
+                    7, 8, 9,
+                    1, 2, 1
+            },
+            3, 3
+    );
+    sortColsByMinElement(m1);
+    matrix m2 = createMatrixFromArray(
+            (int[]) {
+                    4, 6, 5,
+                    7, 9, 8,
+                    1, 1, 2,
+            },
+            3, 3
+    );
+    assert(areTwoMatricesEqual(m1, m2));
+
+    freeMemMatrix(m1);
+    freeMemMatrix(m2);
+}
+
+void test_sortColsByMinElement2() {
+    matrix m1 = createMatrixFromArray(
+            (int[]) {
+                    3, 5, 2, 5,
+                    2, 5, 1, 2,
+                    6, 4, 10, 4
+            },
+            3, 4
+    );
+    sortColsByMinElement(m1);
+    matrix m2 = createMatrixFromArray(
+            (int[]) {
+                    2, 3, 5, 5,
+                    1, 2, 2, 5,
+                    10, 6, 4, 4
+            },
+            3, 4
+    );
+    assert(areTwoMatricesEqual(m1, m2));
+
+    freeMemMatrix(m1);
+    freeMemMatrix(m2);
+}
+
+void test_sortColsByMinElement3() {
+    matrix m1 = createMatrixFromArray(
+            (int[]) {
+                    3, 1, 2,
+                    3, 1, 2,
+                    3, 1, 2
+            },
+            3, 3
+    );
+    sortColsByMinElement(m1);
+    matrix m2 = createMatrixFromArray(
+            (int[]) {
+                    1, 2, 3,
+                    1, 2, 3,
+                    1, 2, 3,
+            },
+            3, 3
+    );
+    assert(areTwoMatricesEqual(m1, m2));
+
+    freeMemMatrix(m1);
+    freeMemMatrix(m2);
+}
+
+void test_sortColsByMinElement() {
+    test_sortColsByMinElement1();
+    test_sortColsByMinElement2();
+    test_sortColsByMinElement3();
+}
+
+void test() {
+    test_swapRowsMinMax();
+    test_sortRowsByMaxElement();
+    test_sortColsByMinElement();
 }
 
 int main() {
-    matrix m = getMemMatrix(3, 3);
-//    matrix n = getMemMatrix(2, 2);
-//    matrix *a = getMemArrayOfMatrices(2, 2, 2);
-//    inputMatrices(&m, 1);
-    inputMatrix(m);
-//    printf("%d\n", areTwoMatricesEqual(a[0], a[1]));
-//    swapColumns(m, 1, 2);
-//    printf("%d\n", isEMatrix(m));
-    transposeSquareMatrix(m);
-    outputMatrix(m);
+    test();
 
     return 0;
 }
