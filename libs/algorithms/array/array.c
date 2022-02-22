@@ -113,7 +113,7 @@ size_t binarySearch(const int *a, size_t n, int x) {
         else
             return middle;
     }
-    return SIZE_MAX;
+    return n;
 }
 
 size_t binarySearchMoreOrEqual(const int *a, const size_t n, const int x) {
