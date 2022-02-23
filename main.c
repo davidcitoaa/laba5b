@@ -4,6 +4,7 @@
 #include "malloc.h"
 #include "libs/algorithms/array/array.h"
 #include <stdint.h>
+#include "math.h"
 
 void test_countZeroRows() {
     matrix m = createMatrixFromArray(
@@ -142,8 +143,6 @@ long long findSumOfMaxesOfPseudoDiagonal(matrix m) {
 }
 
 // 8
-
-
 int getMinInArea(matrix m) {
     position maxIndex = getMaxValuePos(m);
     int minValue = m.values[maxIndex.rowIndex][maxIndex.colIndex];
@@ -157,6 +156,19 @@ int getMinInArea(matrix m) {
         left = left > 0 ? left - 1 : left;
     }
     return minValue;
+}
+
+// 9
+float getDistance(int *a, int n) {
+    float sumOfSquares = 0;
+    for (int i = 0; i < n; ++i) {
+        sumOfSquares += pow(a[i], 2);
+    }
+    return sqrtf(sumOfSquares);
+}
+
+void sortByDistances(matrix m) {
+    insertionSortRowsMatrixByRowCriteriaF(m, &getDistance);
 }
 
 void test_swapRowsMinMax1() {
@@ -740,11 +752,85 @@ void test_getMinInArea3() {
     freeMemMatrix(m1);
 }
 
-
 void test_test_getMinInArea() {
     test_getMinInArea1();
     test_getMinInArea2();
     test_getMinInArea3();
+}
+
+void test_sortByDistances1(){
+    matrix m1 = createMatrixFromArray(
+            (int[]) {
+                    7, 7, 7,
+                    8, 8, 8,
+                    1, 1, 1,
+            },
+            3, 3
+    );
+    sortByDistances(m1);
+    matrix m2 = createMatrixFromArray(
+            (int[]) {
+                    1, 1, 1,
+                    7, 7, 7,
+                    8, 8, 8,
+            },
+            3, 3
+    );
+
+    freeMemMatrix(m1);
+    freeMemMatrix(m2);
+}
+
+void test_sortByDistances2(){
+    matrix m1 = createMatrixFromArray(
+            (int[]) {
+                    7,8,9,
+                    4,5,6,
+                    1,2,3,
+            },
+            3, 3
+    );
+    sortByDistances(m1);
+    matrix m2 = createMatrixFromArray(
+            (int[]) {
+                    1,2,3,
+                    4,5,6,
+                    7,8,9,
+            },
+            3, 3
+    );
+
+    freeMemMatrix(m1);
+    freeMemMatrix(m2);
+}
+
+void test_sortByDistances3(){
+    matrix m1 = createMatrixFromArray(
+            (int[]) {
+                    7,6,9,
+                    4,5,6,
+                    0,2,3,
+            },
+            3, 4
+    );
+    sortByDistances(m1);
+    matrix m2 = createMatrixFromArray(
+            (int[]) {
+                    0,2,3,
+                    4,5,6,
+                    7,6,9,
+            },
+            3, 3
+    );
+
+    freeMemMatrix(m1);
+    freeMemMatrix(m2);
+}
+
+void test_sortByDistances(){
+    test_sortByDistances1();
+    test_sortByDistances2();
+    test_sortByDistances3();
 }
 
 void test() {
@@ -756,6 +842,7 @@ void test() {
     test_isMutuallyInverseMatrices();
     test_test_findSumOfMaxesOfPseudoDiagonal();
     test_test_getMinInArea();
+    test_sortByDistances();
 }
 
 int main() {

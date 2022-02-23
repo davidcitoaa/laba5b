@@ -71,6 +71,23 @@ void swapColumns(matrix m, int j1, int j2) {
     }
 }
 
+void insertionSortRowsMatrixByRowCriteriaF(matrix m, float (*criteria)(int *, int)) {
+    int *arrayForCriteria = (int *) malloc(sizeof(int) * m.nRows);
+    for (int i = 0; i < m.nRows; ++i)
+        arrayForCriteria[i] = criteria(m.values[i], m.nRows);
+    for (int i = 1; i < m.nRows; i++) {
+        int t = arrayForCriteria[i];
+        int j = i;
+        while (j > 0 && arrayForCriteria[j - 1] > t) {
+            swapRows(m, j, j - 1);
+            arrayForCriteria[j] = arrayForCriteria[j - 1];
+            j--;
+        }
+        arrayForCriteria[j] = t;
+    }
+    free(arrayForCriteria);
+}
+
 void insertionSortRowsMatrixByRowCriteria(matrix m, int (*criteria)(const int *, int)) {
     int *arrayForCriteria = (int *) malloc(sizeof(int) * m.nRows);
     for (int i = 0; i < m.nRows; ++i)
