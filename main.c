@@ -7,21 +7,6 @@
 #include "math.h"
 #include "stdlib.h"
 
-void test_countZeroRows() {
-    matrix m = createMatrixFromArray(
-            (int[]) {
-                    1, 1, 0,
-                    0, 0, 0,
-                    0, 0, 1,
-                    0, 0, 0,
-                    0, 1, 1,
-            },
-            5, 3
-    );
-
-    freeMemMatrix(m);
-}
-
 //1. Дана квадратная матрица, все элементы которой различны. Поменять местами
 //строки, в которых находятся максимальный и минимальный элементы.
 void swapRowsMinMax(matrix m) {
@@ -78,9 +63,8 @@ matrix mulMatrices(matrix m1, matrix m2) {
 }
 
 void getSquareOfMatrixIfSymmetric(matrix *m) {
-    if (isSymmetricMatrix(*m)) {
+    if (isSymmetricMatrix(*m))
         *m = mulMatrices(*m, *m);
-    }
 }
 
 // 5. Дана квадратная матрица. Если среди сумм элементов строк матрицы нет равных, то транспонировать матрицу
@@ -268,6 +252,43 @@ int countNonDescendingRowsMatrices(matrix *ms, int nMatrix) {
         if (hasAllNonDescendingRows(ms[i]))
             count++;
     return count;
+}
+
+// 14
+
+bool countValues(const int *a, int n, int value) {
+    for (int i = 0; i < n; ++i) {
+        if (a[i] != value) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+int countZeroRows(matrix m) {
+    int count = 0;
+    for (int i = 0; i < m.nRows; ++i) {
+        count += countValues(m.values[i], m.nCols, 0);
+    }
+    return count;
+}
+
+void printMatrixWithMaxZeroRows(matrix *ms, int nMatrix) {
+    int *aCountZeroRows = (int *) malloc(sizeof(int) * nMatrix);
+    if (NULL == aCountZeroRows) {
+        fprintf(stderr, "bad alloc");
+        exit(1);
+    }
+    for (int i = 0; i < nMatrix; ++i) {
+        aCountZeroRows[i] = countZeroRows(ms[i]);
+    }
+    int maxCountZeroRows = getMax(aCountZeroRows, nMatrix);
+    for (int i = 0; i < nMatrix; ++i) {
+        if (aCountZeroRows[i] == maxCountZeroRows) {
+            outputMatrix(ms[i]);
+        }
+    }
+    free(aCountZeroRows);
 }
 
 void test_swapRowsMinMax1() {
@@ -1168,16 +1189,16 @@ void test_countNonDescendingRowsMatrices2() {
 void test_countNonDescendingRowsMatrices3() {
     int a[] = {
             7, 1,
-            1,1,
+            1, 1,
             ////
-            1,6,
-            2,2,
+            1, 6,
+            2, 2,
             ////
-            5,4,
-            2,3,
+            5, 4,
+            2, 3,
             ////
-            1,3,
-            7,9
+            1, 3,
+            7, 9
     };
 
     matrix *ms = createArrayOfMatrixFromArray(a, 4, 2, 2);
@@ -1191,6 +1212,23 @@ void test_countNonDescendingRowsMatrices() {
     test_countNonDescendingRowsMatrices1();
     test_countNonDescendingRowsMatrices2();
     test_countNonDescendingRowsMatrices3();
+}
+
+void test_countZeroRows() {
+    matrix m1 = createMatrixFromArray(
+            (int[]) {
+                    1, 1, 0,
+                    0, 0, 0,
+                    0, 0, 1,
+                    0, 0, 0,
+                    0, 1, 1,
+            },
+            5, 3
+    );
+
+    assert(countZeroRows(m1) == 2);
+
+    freeMemMatrix(m1);
 }
 
 void test() {
@@ -1207,6 +1245,7 @@ void test() {
     test_getNSpecialElement();
     test_swapPenultimateRow();
     test_countNonDescendingRowsMatrices();
+    test_countZeroRows();
 }
 
 int main() {
