@@ -205,6 +205,32 @@ int countEqClassesByRowsSum(matrix m) {
     return countEq;
 }
 
+// 11
+
+int getNSpecialElement(matrix m) {
+    int *colm = (int *) malloc(sizeof(int) * m.nCols);
+    if (NULL == colm) {
+        fprintf(stderr, "bad alloc");
+        exit(1);
+    }
+    int *colmSum = (int *) malloc(sizeof(int) * m.nRows);
+    if (NULL == colmSum) {
+        fprintf(stderr, "bad alloc");
+        exit(1);
+    }
+    int count = 0;
+    for (int i = 0; i < m.nCols; ++i) {
+        for (int j = 0; j < m.nRows; ++j)
+            colm[j] = m.values[j][i];
+        int maxInCol = getMax(colm, m.nRows);
+        colmSum[i] = (int) getSum(colm, m.nRows);
+        if (colmSum[i] - maxInCol < maxInCol)
+            count++;
+    }
+    free(colm);
+    free(colmSum);
+    return count;
+}
 
 void test_swapRowsMinMax1() {
     matrix m1 = createMatrixFromArray(
@@ -909,6 +935,58 @@ void test_countEqClassesByRowsSum() {
     test_countEqClassesByRowsSum2();
 }
 
+
+void test_getNSpecialElement1() {
+    matrix m1 = createMatrixFromArray(
+            (int[]) {
+                    6, 0, 9, 2,
+                    7, 12, 3, 4,
+                    10, 11, 5, 1
+            },
+            3, 4
+    );
+    int res = 3;
+    assert(getNSpecialElement(m1) == res);
+
+    freeMemMatrix(m1);
+}
+
+void test_getNSpecialElement2() {
+    matrix m1 = createMatrixFromArray(
+            (int[]) {
+                    6, 2, 9, 2,
+                    7, 12, 4, 4,
+                    10, 11, 5, 2
+            },
+            3, 4
+    );
+    int res = 0;
+    assert(getNSpecialElement(m1) == res);
+
+    freeMemMatrix(m1);
+}
+
+void test_getNSpecialElement3() {
+    matrix m1 = createMatrixFromArray(
+            (int[]) {
+                    2, 0, 9, 2,
+                    7, 12, 3, 5,
+                    10, 11, 5, 2
+            },
+            3, 4
+    );
+    int res = 4;
+    assert(getNSpecialElement(m1) == res);
+
+    freeMemMatrix(m1);
+}
+
+void test_getNSpecialElement(){
+    test_getNSpecialElement1();
+    test_getNSpecialElement2();
+    test_getNSpecialElement3();
+}
+
 void test() {
     test_swapRowsMinMax();
     test_sortRowsByMaxElement();
@@ -920,6 +998,7 @@ void test() {
     test_test_getMinInArea();
     test_sortByDistances();
     test_countEqClassesByRowsSum();
+    test_getNSpecialElement();
 }
 
 int main() {
