@@ -3,6 +3,7 @@
 #include <assert.h>
 #include "malloc.h"
 #include "libs/algorithms/array/array.h"
+#include <stdint.h>
 
 void test_countZeroRows() {
     matrix m = createMatrixFromArray(
@@ -120,14 +121,25 @@ bool isMutuallyInverseMatrices(matrix m1, matrix m2) {
 }
 
 // 7
-long long findSumOfMaxesOfPseudoDiagonal(matrix m) {
-    size_t size = m.nRows + m.nCols - 1;
-    int arrayOfMaxesOfPseudoDiagonals[size];
-    for (int i = 0; i < size; i++)
-        arrayOfMaxesOfPseudoDiagonals[i] = 0;
-
+int getDiagonalIndex(position pos, matrix m) {
+    return abs(pos.rowIndex - pos.colIndex - (m.nRows - 1));
 }
 
+long long findSumOfMaxesOfPseudoDiagonal(matrix m) {
+    int nDiagonals = m.nRows + m.nCols - 1;
+    int diagonalMaxes[nDiagonals];
+    for (int i = 0; i < nDiagonals; ++i)
+        diagonalMaxes[i] = INT32_MIN;
+    for (int i = 0; i < m.nRows; ++i)
+        for (int j = 0; j < m.nCols; ++j) {
+            position elementPos = {i, j};
+            int element = m.values[i][j];
+            int diagonalIndex = getDiagonalIndex(elementPos, m);
+            if (element > diagonalMaxes[diagonalIndex])
+                diagonalMaxes[diagonalIndex] = element;
+        }
+    return getSum(diagonalMaxes, nDiagonals) - diagonalMaxes[m.nRows - 1];
+}
 
 // 8
 
@@ -656,7 +668,7 @@ void test_findSumOfMaxesOfPseudoDiagonal2() {
             },
             3, 4
     );
-    long long sum = 18;
+    long long sum = 15;
     assert(findSumOfMaxesOfPseudoDiagonal(m1) == sum);
 
     freeMemMatrix(m1);
@@ -667,7 +679,7 @@ void test_findSumOfMaxesOfPseudoDiagonal3() {
             (int[]) {
                     1, 0, 0,
                     0, 1, 0,
-                    0, 0, 1
+                    1, 0, 1
             },
             3, 3
     );
@@ -675,6 +687,12 @@ void test_findSumOfMaxesOfPseudoDiagonal3() {
     assert(findSumOfMaxesOfPseudoDiagonal(m1) == sum);
 
     freeMemMatrix(m1);
+}
+
+void test_test_findSumOfMaxesOfPseudoDiagonal(){
+    test_findSumOfMaxesOfPseudoDiagonal1();
+    test_findSumOfMaxesOfPseudoDiagonal2();
+    test_findSumOfMaxesOfPseudoDiagonal3();
 }
 
 void test_getMinInArea1() {
@@ -736,6 +754,7 @@ void test() {
     test_getSquareOfMatrixIfSymmetric();
     test_transposeIfMatrixHasEqualSumOfRows();
     test_isMutuallyInverseMatrices();
+    test_test_findSumOfMaxesOfPseudoDiagonal();
     test_test_getMinInArea();
 }
 
