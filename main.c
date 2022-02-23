@@ -232,6 +232,20 @@ int getNSpecialElement(matrix m) {
     return count;
 }
 
+// 12
+void getRowFromColumn(matrix m, size_t pos, int *array) {
+    for (int i = 0; i < m.nRows; ++i)
+        array[i] = m.values[i][pos];
+}
+
+void swapPenultimateRow(matrix m) {
+    position minPos = getMinValuePos(m);
+    int colWithMin[m.nRows];
+    getRowFromColumn(m, minPos.colIndex, colWithMin);
+    for (int i = 0; i < m.nRows; ++i)
+        m.values[m.nRows - 2][i] = colWithMin[i];
+}
+
 void test_swapRowsMinMax1() {
     matrix m1 = createMatrixFromArray(
             (int[]) {
@@ -981,10 +995,91 @@ void test_getNSpecialElement3() {
     freeMemMatrix(m1);
 }
 
+void test_swapPenultimateRow1(){
+    matrix m1 = createMatrixFromArray(
+            (int[]) {
+                    5, 2, 5,
+                    6, 1, 8,
+                    2, 14, 9,
+            },
+            3, 3
+    );
+    swapPenultimateRow(m1);
+    matrix m2 = createMatrixFromArray(
+            (int[]) {
+                    5, 2, 5,
+                    2, 1, 14,
+                    2, 14, 9,
+            },
+            3, 3
+    );
+
+    assert(areTwoMatricesEqual(m1, m2));
+
+    freeMemMatrix(m1);
+    freeMemMatrix(m2);
+}
+
+void test_swapPenultimateRow2(){
+    matrix m1 = createMatrixFromArray(
+            (int[]) {
+                    4, 4, 3,
+                    3, 5, 6,
+                    2, 3, 9,
+            },
+            3, 3
+    );
+    swapPenultimateRow(m1);
+    matrix m2 = createMatrixFromArray(
+            (int[]) {
+                    4, 4, 3,
+                    4, 3, 2,
+                    2, 3, 9,
+            },
+            3, 3
+    );
+
+    assert(areTwoMatricesEqual(m1, m2));
+
+    freeMemMatrix(m1);
+    freeMemMatrix(m2);
+}
+
+void test_swapPenultimateRow3(){
+    matrix m1 = createMatrixFromArray(
+            (int[]) {
+                    1, 1, 1,
+                    2, 2, 2,
+                    3, 3, 3,
+            },
+            3, 3
+    );
+    swapPenultimateRow(m1);
+    matrix m2 = createMatrixFromArray(
+            (int[]) {
+                    1, 1, 1,
+                    1, 2, 3,
+                    3, 3, 3,
+            },
+            3, 3
+    );
+
+    assert(areTwoMatricesEqual(m1, m2));
+
+    freeMemMatrix(m1);
+    freeMemMatrix(m2);
+}
+
 void test_getNSpecialElement(){
     test_getNSpecialElement1();
     test_getNSpecialElement2();
     test_getNSpecialElement3();
+}
+
+void test_swapPenultimateRow() {
+    test_swapPenultimateRow1();
+    test_swapPenultimateRow2();
+    test_swapPenultimateRow3();
 }
 
 void test() {
@@ -999,6 +1094,7 @@ void test() {
     test_sortByDistances();
     test_countEqClassesByRowsSum();
     test_getNSpecialElement();
+    test_swapPenultimateRow();
 }
 
 int main() {
