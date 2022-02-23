@@ -257,38 +257,64 @@ int countNonDescendingRowsMatrices(matrix *ms, int nMatrix) {
 // 14
 
 bool countValues(const int *a, int n, int value) {
-    for (int i = 0; i < n; ++i) {
-        if (a[i] != value) {
+    for (int i = 0; i < n; ++i)
+        if (a[i] != value)
             return 0;
-        }
-    }
     return 1;
 }
 
 int countZeroRows(matrix m) {
     int count = 0;
-    for (int i = 0; i < m.nRows; ++i) {
+    for (int i = 0; i < m.nRows; ++i)
         count += countValues(m.values[i], m.nCols, 0);
-    }
     return count;
 }
 
 void printMatrixWithMaxZeroRows(matrix *ms, int nMatrix) {
-    int *aCountZeroRows = (int *) malloc(sizeof(int) * nMatrix);
-    if (NULL == aCountZeroRows) {
+    int *countZeroRows = (int *) malloc(sizeof(int) * nMatrix);
+    if (NULL == countZeroRows) {
         fprintf(stderr, "bad alloc");
         exit(1);
     }
-    for (int i = 0; i < nMatrix; ++i) {
-        aCountZeroRows[i] = countZeroRows(ms[i]);
-    }
-    int maxCountZeroRows = getMax(aCountZeroRows, nMatrix);
-    for (int i = 0; i < nMatrix; ++i) {
-        if (aCountZeroRows[i] == maxCountZeroRows) {
+    for (int i = 0; i < nMatrix; ++i)
+        countZeroRows[i] = countZeroRows[i];
+    int maxCountZeroRows = getMax(countZeroRows, nMatrix);
+    for (int i = 0; i < nMatrix; ++i)
+        if (countZeroRows[i] == maxCountZeroRows)
             outputMatrix(ms[i]);
-        }
+    free(countZeroRows);
+}
+
+// 15
+
+int getMaxAbsoluteOfArray(int *a, int size) {
+    int absoluteMax = abs(a[0]);
+    for (int i = 0; i < size; ++i) {
+        int absolute = abs(a[i]);
+        if (absolute > absoluteMax)
+            absoluteMax = absolute;
     }
-    free(aCountZeroRows);
+    return absoluteMax;
+}
+
+int getMaxAbsoluteOfMatrix(matrix m) {
+    int absoluteMax = abs(m.values[0][0]);
+    for (int i = 0; i < m.nRows; ++i) {
+        int absolute = getMaxAbsoluteOfArray(m.values[i], m.nCols);
+        if (absolute > absoluteMax)
+            absoluteMax = absolute;
+    }
+    return absoluteMax;
+}
+
+void printMatricesWithMinOfMaxOfAbsolute(matrix *ms, int size) {
+    int absoluteMax[size];
+    for (int matrix = 0; matrix < size; ++matrix)
+        absoluteMax[matrix] = getMaxAbsoluteOfMatrix(ms[matrix]);
+    int min = getMin(absoluteMax, size);
+    for (int i = 0; i < size; ++i)
+        if (absoluteMax[i] == min)
+            outputMatrix(ms[i]);
 }
 
 void test_swapRowsMinMax1() {
@@ -1231,6 +1257,31 @@ void test_countZeroRows() {
     freeMemMatrix(m1);
 }
 
+void test_printMatricesWithMinOfMaxOfAbsolute() {
+    matrix *ms = createArrayOfMatrixFromArray((int[]) {
+            0, 0,
+            0, 0,
+            0, -42,
+
+            1, 42,
+            1, 1,
+            1, 1,
+
+            0, 0,
+            0, 0,
+            4, 7000,
+
+            0, 0,
+            0, 100,
+            0, 0,
+
+            0, 100,
+            0, 1,
+            0, 1}, 5, 3, 2);
+
+    printMatricesWithMinOfMaxOfAbsolute(ms, 5);
+}
+
 void test() {
     test_swapRowsMinMax();
     test_sortRowsByMaxElement();
@@ -1246,6 +1297,7 @@ void test() {
     test_swapPenultimateRow();
     test_countNonDescendingRowsMatrices();
     test_countZeroRows();
+    test_printMatricesWithMinOfMaxOfAbsolute();
 }
 
 int main() {
