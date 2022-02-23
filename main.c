@@ -5,6 +5,7 @@
 #include "libs/algorithms/array/array.h"
 #include <stdint.h>
 #include "math.h"
+#include "stdlib.h"
 
 void test_countZeroRows() {
     matrix m = createMatrixFromArray(
@@ -170,6 +171,40 @@ float getDistance(int *a, int n) {
 void sortByDistances(matrix m) {
     insertionSortRowsMatrixByRowCriteriaF(m, &getDistance);
 }
+
+// 10
+int cmp(const void *pa, const void *pb) {
+    int arg1 = *(const int *) pa;
+    int arg2 = *(const int *) pb;
+
+    if (arg1 < arg2) return -1;
+    if (arg1 > arg2) return 1;
+    return 0;
+}
+
+int countNUnique(const int *a, int n) {
+    int uniqueElements = n > 0;
+    for (int i = 1; i < n; ++i) {
+        if (a[i] != a[i - 1])
+            uniqueElements++;
+    }
+    return uniqueElements;
+}
+
+int countEqClassesByRowsSum(matrix m) {
+    int *sum = (int *) malloc(sizeof(int) * m.nRows);
+    if (NULL == sum) {
+        fprintf(stderr, "bad alloc");
+        exit(1);
+    }
+    for (int i = 0; i < m.nRows; ++i)
+        sum[i] = (int) getSum(m.values[i], m.nCols);
+    qsort(sum, m.nRows, sizeof(int), cmp);
+    int countEq = countNUnique(sum, m.nRows);
+    free(sum);
+    return countEq;
+}
+
 
 void test_swapRowsMinMax1() {
     matrix m1 = createMatrixFromArray(
@@ -701,7 +736,7 @@ void test_findSumOfMaxesOfPseudoDiagonal3() {
     freeMemMatrix(m1);
 }
 
-void test_test_findSumOfMaxesOfPseudoDiagonal(){
+void test_test_findSumOfMaxesOfPseudoDiagonal() {
     test_findSumOfMaxesOfPseudoDiagonal1();
     test_findSumOfMaxesOfPseudoDiagonal2();
     test_findSumOfMaxesOfPseudoDiagonal3();
@@ -758,7 +793,7 @@ void test_test_getMinInArea() {
     test_getMinInArea3();
 }
 
-void test_sortByDistances1(){
+void test_sortByDistances1() {
     matrix m1 = createMatrixFromArray(
             (int[]) {
                     7, 7, 7,
@@ -781,21 +816,21 @@ void test_sortByDistances1(){
     freeMemMatrix(m2);
 }
 
-void test_sortByDistances2(){
+void test_sortByDistances2() {
     matrix m1 = createMatrixFromArray(
             (int[]) {
-                    7,8,9,
-                    4,5,6,
-                    1,2,3,
+                    7, 8, 9,
+                    4, 5, 6,
+                    1, 2, 3,
             },
             3, 3
     );
     sortByDistances(m1);
     matrix m2 = createMatrixFromArray(
             (int[]) {
-                    1,2,3,
-                    4,5,6,
-                    7,8,9,
+                    1, 2, 3,
+                    4, 5, 6,
+                    7, 8, 9,
             },
             3, 3
     );
@@ -804,21 +839,21 @@ void test_sortByDistances2(){
     freeMemMatrix(m2);
 }
 
-void test_sortByDistances3(){
+void test_sortByDistances3() {
     matrix m1 = createMatrixFromArray(
             (int[]) {
-                    7,6,9,
-                    4,5,6,
-                    0,2,3,
+                    7, 6, 9,
+                    4, 5, 6,
+                    0, 2, 3,
             },
             3, 4
     );
     sortByDistances(m1);
     matrix m2 = createMatrixFromArray(
             (int[]) {
-                    0,2,3,
-                    4,5,6,
-                    7,6,9,
+                    0, 2, 3,
+                    4, 5, 6,
+                    7, 6, 9,
             },
             3, 3
     );
@@ -827,10 +862,51 @@ void test_sortByDistances3(){
     freeMemMatrix(m2);
 }
 
-void test_sortByDistances(){
+void test_sortByDistances() {
     test_sortByDistances1();
     test_sortByDistances2();
     test_sortByDistances3();
+}
+
+void test_countEqClassesByRowsSum1() {
+    matrix m1 = createMatrixFromArray(
+            (int[]) {
+                    7, 1,
+                    2, 7,
+                    5, 4,
+                    4, 3,
+                    1, 6,
+                    8, 0
+            },
+            6, 2
+    );
+
+    assert(countEqClassesByRowsSum(m1) == 3);
+
+    freeMemMatrix(m1);
+}
+
+void test_countEqClassesByRowsSum2() {
+    matrix m1 = createMatrixFromArray(
+            (int[]) {
+                    5, 1,
+                    6, 0,
+                    2, 4,
+                    4, 2,
+                    7, 6,
+                    3, 3
+            },
+            6, 2
+    );
+
+    assert(countEqClassesByRowsSum(m1) == 2);
+
+    freeMemMatrix(m1);
+}
+
+void test_countEqClassesByRowsSum() {
+    test_countEqClassesByRowsSum1();
+    test_countEqClassesByRowsSum2();
 }
 
 void test() {
@@ -843,6 +919,7 @@ void test() {
     test_test_findSumOfMaxesOfPseudoDiagonal();
     test_test_getMinInArea();
     test_sortByDistances();
+    test_countEqClassesByRowsSum();
 }
 
 int main() {
